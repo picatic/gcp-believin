@@ -39,6 +39,6 @@ steps:
     EOS
 
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '--tag=gcr.io/picatic-ops/yvr-io:$SHORT_SHA', '.']
+  args: ['build', '--tag=gcr.io/yvr-io/hello:$SHORT_SHA', '.']
 
-images: ['gcr.io/picatic-ops/yvr-io:$SHORT_SHA']
+images: ['gcr.io/yvr-io/hello:$SHORT_SHA']
