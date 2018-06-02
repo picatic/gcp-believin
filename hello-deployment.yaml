@@ -1,0 +1,16 @@
+apiVersion: apps/v1beta1
+kind: "Deployment"
+metadata:
+  name: "hello"
+spec:
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      containers:
+        - name: webflow
+          image: "gcr.io/yvr-io/hello:646f62c"
+          ports:
+            - containerPort: 8080
+              name: hello
