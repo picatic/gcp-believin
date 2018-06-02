@@ -1,0 +1,47 @@
+steps:
+
+## Go build produces binary
+##   /workspace/yvr-io/gopath/bin/yvr-io
+##
+## Docker Image build copies
+##  - Certs
+##  - /workspace/yvr-io/gopath/bin/yvr-io -> /yvr-io
+##
+## Use dir: because we are not at the root of the git repo.
+##  `dir: yvr-io`
+##
+
+#CGO_ENABLED=0 go build -a -installsuffix cgo
+- name: 'gcr.io/cloud-builders/go'
+  dir: yvr-io
+  env:
+  - PROJECT_ROOT=yvr-io
+  - CGO_ENABLED=0
+  args:
+    - 'install'
+    - '-a'
+    - '-installsuffix'
+    - 'cgo'
+    - '.'
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  dir: yvr-io
+  entrypoint: 'bash'
+  id: 'write'
+  args:
+  - '-c'
+  - |
+    cp /etc/ssl/certs/ca-certificates.crt .
+
+    cat > Dockerfile <<EOS
+    FROM scratch
+    ADD ca-certificates.crt /etc/ssl/certs/
+    ADD gopath/bin/yvr-io /
+    CMD ["/yvr-io"]
+    EOS
+
+- name: 'gcr.io/cloud-builders/docker'
+  dir: yvr-io
+  args: ['build', '--tag=gcr.io/picatic-ops/yvr-io:$SHORT_SHA', '.']
+
+images: ['gcr.io/picatic-ops/yvr-io:$SHORT_SHA']
