@@ -13,7 +13,6 @@ steps:
 
 #CGO_ENABLED=0 go build -a -installsuffix cgo
 - name: 'gcr.io/cloud-builders/go'
-  dir: yvr-io
   env:
   - PROJECT_ROOT=yvr-io
   - CGO_ENABLED=0
@@ -25,7 +24,6 @@ steps:
     - '.'
 
 - name: 'gcr.io/cloud-builders/gcloud'
-  dir: yvr-io
   entrypoint: 'bash'
   id: 'write'
   args:
@@ -41,7 +39,6 @@ steps:
     EOS
 
 - name: 'gcr.io/cloud-builders/docker'
-  dir: yvr-io
   args: ['build', '--tag=gcr.io/picatic-ops/yvr-io:$SHORT_SHA', '.']
 
 images: ['gcr.io/picatic-ops/yvr-io:$SHORT_SHA']
